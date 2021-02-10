@@ -9,6 +9,7 @@ mongoose.connect(mongoUrl, {
     useFindAndModify:true,
     useUnifiedTopology:true,
     useNewUrlParser:true,
+    useCreateIndex:true
 }, () => {
     console.info('connected to the database');
 });

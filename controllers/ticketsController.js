@@ -20,3 +20,19 @@ exports.createATicket = catchAsync(async(req,res,next)=> {
         }
     })
 });
+
+exports.getTickets = catchAsync(async(req,res,next) => {
+    const tickets = await Ticket.aggregate([{
+        $skip:10 * req.params.page},
+        {$limit:10},
+        {$sort:{createdAt:1}
+    }]);
+    res.status(200).json({
+        status:'ok',
+        message:'tickets retrieved',
+        results:tickets.length,
+        data:{
+            tickets,
+        }
+    })
+});

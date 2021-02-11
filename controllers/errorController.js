@@ -29,6 +29,7 @@ const sendError = (err, res) => {
                 message:err.message
             })
         }else{
+            console.error(err);
             res.status(err.statusCode).json({
                 status:err.status,
                 message:err.message,
@@ -42,6 +43,7 @@ const sendError = (err, res) => {
                 message:'something went wrong'
             })
         }else{
+            console.error(err);
             res.status(500).json({
                 status:'fail',
                 message:'something went wrong',

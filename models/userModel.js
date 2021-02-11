@@ -35,10 +35,6 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
-    level:{
-        type:Number,
-        default:1
-    },
 });
 
 userSchema.pre('save', async function(next){

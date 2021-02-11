@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    tickets:[{
+        type:mongoose.Schema.ObjectId,
+        ref:'Ticket'
+    }]
 });
 
 userSchema.pre('save', async function(next){

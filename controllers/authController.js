@@ -59,3 +59,13 @@ exports.validateToken = catchAsync(async(req,res,next) => {
         }
     })
 });
+
+exports.protect = catchAsync(async(req,res,next) => {
+    const {token} = req.query;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if(!user) return next(new AppError('the user belonging to this token no longer exists', 400));
+    req.user = user;
+    res.locals.user = user;
+    next();
+});

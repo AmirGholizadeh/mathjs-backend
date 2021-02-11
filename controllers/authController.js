@@ -24,16 +24,16 @@ const signSendToken = (user, res, statusCode, message) => {
 
 exports.signup = catchAsync(async(req,res,next) => {
     const {username, password, passwordConfirm} = req.body;
-    if(!username || !password ) next(new AppError('enter password and username ', 400));
+    if(!username || !password ) return next(new AppError('enter password and username ', 400));
     const user = await User.create({username, password,passwordConfirm});
     signSendToken(user, res, 201, 'signed up');
 });
 
 exports.login = catchAsync(async(req,res,next) => {
     const {username, password} = req.body;
-    if(!username || !password) next(new AppError('enter password and username', 400));
+    if(!username || !password) return next(new AppError('enter password and username', 400));
     const user = await User.findOne({username}).select('+password');
-    if(!user || (await !user.comparePassword(password, user.password))) next(new AppError('username or password is incorrect!', 400));
+    if(!user || !(await user.comparePassword(password, user.password))) return next(new AppError('username or password is incorrect!', 400));
     signSendToken(user, res, 200, 'logged in');
 });
 

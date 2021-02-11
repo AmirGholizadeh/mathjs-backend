@@ -37,3 +37,11 @@ exports.login = catchAsync(async(req,res,next) => {
     signSendToken(user, res, 200, 'logged in');
 });
 
+exports.restrict = allowed =>catchAsync(async(req,res,next) => {
+    const {token} = req.query;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if(!user) return next(new AppError('user is not found', 400));
+    if(allowed.includes(user.role)) return next();
+    return next(new AppError('you are not authorized', 401))
+});

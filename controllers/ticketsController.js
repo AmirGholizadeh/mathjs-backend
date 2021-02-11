@@ -36,3 +36,16 @@ exports.getTickets = catchAsync(async(req,res,next) => {
         }
     })
 });
+
+exports.closeTicket = catchAsync(async(req,res,next) => {
+    const ticket = await Ticket.findById(req.params.id);
+    ticket.status = 'closed';
+    await ticket.save({validateBeforeSave:false});
+    res.status(200).json({
+        status:'ok',
+        message:'ticket status changed',
+        data:{
+            ticket
+        }
+    })
+});

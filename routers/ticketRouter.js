@@ -10,5 +10,6 @@ router.post('/sendTicket', ticketsController.createATicket);
 
 router.use(authController.restrict(['manager', 'admin']));
 router.get('/getTickets', ticketsController.getTickets);
+router.get('/closeTicket/:id', ticketsController.closeTicket);
 
 module.exports = router;

@@ -5,6 +5,8 @@ const userRouter = require('./routers/userRouter');
 const ticketRouter = require('./routers/ticketRouter');
 const errorController = require('./controllers/errorController');
 
+const AppError = require('./utils/appError');
+
 const app = express();
 
 app.use(express.json({limit:'4kb'}));
@@ -15,7 +17,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tickets', ticketRouter);
 
 app.use('*', (req,res,next) => {
-    console.log('the page is not found!');
+    return next(new AppError('the endpoint is not found', 404));
 });
 
 app.use(errorController);

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login)
+router.get('/validateToken/:token', authController.validateToken);
 router.use(authController.restrict(['manager', 'admin']))
 router.route('/').get(userController.getAllUsers);
 router.route('/:id').get(userController.getOneUser);

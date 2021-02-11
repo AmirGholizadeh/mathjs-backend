@@ -12,5 +12,6 @@ router.get('/getTopUsers/:page', userController.getTopUsers);
 router.use(authController.restrict(['manager', 'admin']))
 router.route('/').get(userController.getAllUsers);
 router.route('/:id').get(userController.getOneUser);
+router.post('/createAdmin', authController.restrict(['manager']), userController.createAdmin);
 
 module.exports = router;

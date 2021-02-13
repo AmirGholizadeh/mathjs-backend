@@ -4,7 +4,6 @@ const helmet = require('helmet');
 const userRouter = require('./routers/userRouter');
 const ticketRouter = require('./routers/ticketRouter');
 const replyRouter = require('./routers/replyRouter');
-const reportsRouter = require('./routers/reportsRouter');
 
 const errorController = require('./controllers/errorController');
 
@@ -19,7 +18,6 @@ app.use(helmet());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tickets', ticketRouter);
 app.use('/api/v1/replies', replyRouter);
-app.use('/api/v1/reports', reportsRouter);
 
 app.use('*', (req,res,next) => next(new AppError('the endpoint is not found', 404)));
 

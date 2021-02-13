@@ -38,7 +38,8 @@ exports.login = catchAsync(async(req,res,next) => {
 });
 
 exports.restrict = allowed =>catchAsync(async(req,res,next) => {
-    const {token} = req.query;
+
+    const {token} = req.body;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     if(!user) return next(new AppError('user is not found', 400));
@@ -47,7 +48,7 @@ exports.restrict = allowed =>catchAsync(async(req,res,next) => {
 });
 
 exports.validateToken = catchAsync(async(req,res,next) => {
-    const {token} =req.params;
+    const {token} =req.body;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     res.status(200).json({
@@ -61,7 +62,7 @@ exports.validateToken = catchAsync(async(req,res,next) => {
 });
 
 exports.protect = catchAsync(async(req,res,next) => {
-    const {token} = req.query;
+    const {token} = req.body;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     if(!user) return next(new AppError('the user belonging to this token no longer exists', 400));

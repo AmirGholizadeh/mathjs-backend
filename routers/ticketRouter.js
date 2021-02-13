@@ -9,7 +9,7 @@ router.use(authController.protect);
 router.post('/sendTicket', ticketsController.createATicket);
 
 router.use(authController.restrict(['manager', 'admin']));
-router.get('/getTickets', ticketsController.getTickets);
-router.get('/closeTicket/:id', ticketsController.closeTicket);
+router.post('/getTickets', ticketsController.getTickets);
+router.post('/closeTicket/:id', ticketsController.closeTicket);
 
 module.exports = router;

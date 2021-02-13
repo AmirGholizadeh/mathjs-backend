@@ -8,10 +8,10 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login)
 router.get('/validateToken/:token', authController.validateToken);
 router.post('/editTopScore', authController.protect, userController.editTopScore);
-router.get('/getTopUsers/:page', userController.getTopUsers);
+router.post('/getTopUsers/:page', userController.getTopUsers);
 router.use(authController.restrict(['manager', 'admin']))
-router.route('/').get(userController.getAllUsers);
-router.route('/:id').get(userController.getOneUser);
+router.route('/').post(userController.getAllUsers);
+router.route('/:id').post(userController.getOneUser);
 router.post('/createAdmin', authController.restrict(['manager']), userController.createAdmin);
 
 module.exports = router;

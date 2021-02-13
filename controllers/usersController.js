@@ -35,11 +35,8 @@ exports.getTopUsers = catchAsync(async(req,res,next) => {
 
 exports.editTopScore = catchAsync(async(req,res,next) => {
     const {topScore} = req.body;
-    const {token} = req.query;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    user.topScore = topScore;
-    user.save({validateBeforeSave:false});
+    req.user.topScore = topScore;
+    req.user.save({validateBeforeSave:false});
     res.status(200).json({
         status:'ok',
         message:'user topscore is updated',

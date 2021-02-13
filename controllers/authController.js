@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const Report = require('../models/reportsModel');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -26,6 +27,7 @@ exports.signup = catchAsync(async(req,res,next) => {
     const {username, password, passwordConfirm} = req.body;
     if(!username || !password ) return next(new AppError('enter password and username ', 400));
     const user = await User.create({username, password,passwordConfirm});
+    await Report.create({description:`user ${user._id} is signed up`, by:user._id});
     signSendToken(user, res, 201, 'signed up');
 });
 
@@ -34,6 +36,7 @@ exports.login = catchAsync(async(req,res,next) => {
     if(!username || !password) return next(new AppError('enter password and username', 400));
     const user = await User.findOne({username}).select('+password');
     if(!user || !(await user.comparePassword(password, user.password))) return next(new AppError('username or password is incorrect!', 400));
+    await Report.create({description:`user ${user._id} is logged in`, by:user._id});
     signSendToken(user, res, 200, 'logged in');
 });
 

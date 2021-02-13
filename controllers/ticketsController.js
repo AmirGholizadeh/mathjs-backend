@@ -1,4 +1,5 @@
 const Ticket = require('../models/ticketModel');
+const Report = require('../models/reportsModel');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken')
 const catchAsync = require('../utils/catchAsync');
@@ -10,6 +11,7 @@ exports.createATicket = catchAsync(async(req,res,next)=> {
     const ticket = await Ticket.create({title, message, from:req.user._id});
     req.user.tickets.push(ticket);
     await req.user.save({validateBeforeSave:false});
+    await Report.create({description:`ticket by id ${ticket._id} is created`, by:req.user._id});
     res.status(201).json({
         status:'ok',
         message:'ticket is sent',
@@ -39,8 +41,10 @@ exports.getTickets = catchAsync(async(req,res,next) => {
 
 exports.closeTicket = catchAsync(async(req,res,next) => {
     const ticket = await Ticket.findById(req.params.id);
+    if(!ticket) return next(new AppError('no ticket is found by that id', 404));
     ticket.status = 'closed';
     await ticket.save({validateBeforeSave:false});
+    await Report.create({description:`ticket by id ${ticket._id} is closed`, by:req.user._id});
     res.status(200).json({
         status:'ok',
         message:'ticket status changed',

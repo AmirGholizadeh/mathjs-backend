@@ -3,20 +3,13 @@ const Report = require('../models/reportsModel');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError')
+const sortObj = require('../utils/sortObj');
 const handlerFactory = require('./handlerFactory');
 exports.getOneUser = handlerFactory.getOne(User);
 exports.getAllUsers = catchAsync(async(req,res,next) => {
     const {page, sort} = req.query;
     let aggregation = [{$skip:10*page}, {$limit:10}];
-    if(sort){
-        let sortObj = {};
-         sort.split(',').forEach(el => {
-            const keyAndValue = el.split(':');
-            sortObj[keyAndValue[0]] = Number(keyAndValue[1]);
-        })    
-        aggregation.unshift({$sort:sortObj});
-        console.log(sortObj);
-    }
+    if(sort) aggregation.unshift({$sort:sortObj(sort)});
     const users = await User.aggregate(aggregation);
     res.status(200).json({
         status:'ok',

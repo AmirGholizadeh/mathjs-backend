@@ -4,8 +4,28 @@ const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError')
 const handlerFactory = require('./handlerFactory');
-exports.getAllUsers = handlerFactory.getAll(User);
 exports.getOneUser = handlerFactory.getOne(User);
+exports.getAllUsers = catchAsync(async(req,res,next) => {
+    const {page, sort} = req.query;
+    let aggregation = [{$skip:10*page}, {$limit:10}];
+    if(sort){
+        let sortObj = {};
+         sort.split(',').forEach(el => {
+            const keyAndValue = el.split(':');
+            sortObj[keyAndValue[0]] = Number(keyAndValue[1]);
+        })    
+        aggregation.unshift({$sort:sortObj});
+        console.log(sortObj);
+    }
+    const users = await User.aggregate(aggregation);
+    res.status(200).json({
+        status:'ok',
+        message:'retrieved users',
+        data:{
+            users
+        }
+    })
+});
 
 exports.createAdmin = catchAsync(async(req,res,next) => {
     const {username, password, passwordConfirm} = req.body;
@@ -22,9 +42,9 @@ exports.createAdmin = catchAsync(async(req,res,next) => {
 
 exports.getTopUsers = catchAsync(async(req,res,next) => {
     const users = await User.aggregate([{
-        $skip:10 * req.params.page},
+        $skip:10 * req.query.page},
         {$limit:10},
-        {$sort:{topScore:1}
+        {$sort:{topScore:-1}
     }]);
     res.status(200).json({
         results:users.length,

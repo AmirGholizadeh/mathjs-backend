@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authController.protect, authController.restrict(['manager']));
 
 
-router.post("/getReports", reportsController.getReports);
+router.post("/getReports/:page", reportsController.getReports);
 router.post('/getIndividualReports/:id',reportsController.getIndividualReports);
 
 module.exports = router;

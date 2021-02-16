@@ -8,7 +8,7 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login)
 router.get('/validateToken/:token', authController.validateToken);
 router.post('/editTopScore', authController.protect, userController.editTopScore);
-router.post('/getTopUsers/:page', userController.getTopUsers);
+router.post('/getTopUsers/', userController.getTopUsers);
 router.use(authController.restrict(['manager', 'admin']))
 router.route('/').post(userController.getAllUsers);
 router.route('/:id').post(userController.getOneUser);

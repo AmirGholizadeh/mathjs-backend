@@ -7,7 +7,6 @@ exports.getReports = catchAsync(async(req,res,next) => {
     const {page, sort} = req.query;
     const aggregation = [{$skip:10*page}, {$limit:10}];
     if(sort) aggregation.unshift({$sort:{at:Number(sort)}});
-    console.log(aggregation)
     const reports = await Report.aggregate(aggregation);
     res.status(200).json({
         status:'ok',

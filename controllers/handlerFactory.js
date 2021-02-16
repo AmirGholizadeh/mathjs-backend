@@ -1,11 +1,11 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const docExists = (doc) => {
+const docExists = (doc, next) => {
     if (!doc) {
         return next(new AppError('No document was found with that ID.', 404));
     }
 }
-exports.getAll = (Model, aggregation) => catchAsync(async(req, res) => {
+exports.getAll = (Model, aggregation) => catchAsync(async(req, res,next) => {
     let doc;
     if (aggregation) {
         doc = await Model.aggregate(aggregation);
@@ -21,9 +21,9 @@ exports.getAll = (Model, aggregation) => catchAsync(async(req, res) => {
     });
 
 });
-exports.getOne = Model => catchAsync(async(req, res) => {
+exports.getOne = Model => catchAsync(async(req, res,next) => {
     const doc = await Model.findById(req.params.id);
-    docExists(doc);
+    docExists(doc, next);
     res.status(200).json({
         status: 'success',
         data: {
@@ -32,7 +32,7 @@ exports.getOne = Model => catchAsync(async(req, res) => {
     });
 
 });
-exports.updateOne = Model => catchAsync(async(req, res) => {
+exports.updateOne = Model => catchAsync(async(req, res,next) => {
 
     const updatedDoc = await Model.findByIdAndUpdate(req.params.id, req.body, {
         runValidators: true
@@ -45,7 +45,7 @@ exports.updateOne = Model => catchAsync(async(req, res) => {
         }
     });
 });
-exports.createOne = Model => catchAsync(async(req, res) => {
+exports.createOne = Model => catchAsync(async(req, res,next) => {
     const newDoc = await Model.create(req.body);
     res.status(201).json({
         status: 'success',
@@ -54,15 +54,15 @@ exports.createOne = Model => catchAsync(async(req, res) => {
         }
     })
 });
-exports.deleteOne = Model => catchAsync(async(req, res) => {
+exports.deleteOne = Model => catchAsync(async(req, res,next) => {
     const doc = await Model.findOneAndDelete(req.params.id);
-    docExists(doc);
+    docExists(doc,next);
     res.status(204).json({
         status: 'success',
         data: null
     });
 });
-exports.deleteAll = Model => catchAsync(async(req, res) => {
+exports.deleteAll = Model => catchAsync(async(req, res,next) => {
     await Model.deleteMany();
     res.status(204).json({
         status: 'success',

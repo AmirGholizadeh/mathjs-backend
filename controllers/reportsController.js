@@ -10,3 +10,14 @@ exports.getReports = catchAsync(async(req,res,next) => {
         data:{reports}
     })
 });
+
+exports.getIndividualReports = catchAsync(async(req,res,next) => {
+    const reports = await Report.find({by:req.params.id});
+    res.status(200).json({
+        status:'ok',
+        message:'retrieved all the individual`s reports',
+        data:{
+            reports
+        }
+    })
+});

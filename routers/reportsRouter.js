@@ -4,8 +4,10 @@ const reportsController  = require('../controllers/reportsController');
 
 const router = express.Router();
 
-router.use(authController.protect);
+router.use(authController.protect, authController.restrict(['manager']));
 
-router.post("/getReports", authController.restrict(['manager']), reportsController.getReports);
+
+router.post("/getReports", reportsController.getReports);
+router.post('/getIndividualReports/:id',reportsController.getIndividualReports);
 
 module.exports = router;

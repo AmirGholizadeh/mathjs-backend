@@ -1,3 +1,11 @@
+/**
+ * @description custom error handler
+ * @param {string} message the message for the error  
+ * @param {number} statusCode the status code for the rror
+ * @returns {object}
+ */
+
+
 class AppError extends Error{
     constructor(message, statusCode){
         super(message);
